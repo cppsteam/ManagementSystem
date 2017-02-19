@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" sticky="false" />  
+
+            <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+                <p:outputLabel for="subject" value="系别："/>
+                <p:selectOneMenu id="subject" value="#{teachingProgramSearchBean.subjectName}" panelStyle="width:180px" effect="fade" var="names" style="width:160px" filter="true" filterMatchMode="startsWith" > 
+                    <f:selectItems value="#{teachingProgramSearchBean.subjectNames}" var="name" itemLabel="#{name}" itemValue="#{name}" />
+                    <p:ajax listener="#{teachingProgramSearchBean.setCourseTrainingPlans()}" update=":form:table"/>
+                </p:selectOneMenu>
+            </h:panelGrid>
+
+            <p:dataTable var="plan" value="#{teachingProgramSearchBean.courseTrainingPlans}" id="table">
+                <f:facet name="header">
+                    #{teachingProgramSearchBean.subjectName}教学计划表
+                </f:facet>
+
+                <p:columnGroup type="header">
+                    <p:row>
+                        <p:column rowspan="3" colspan="2" headerText="课程类别" />
+                        <p:column rowspan="3" headerText="课程编码" />
+                        <p:column rowspan="3" headerText="课程名称" />
+                        <p:column rowspan="3" headerText="学分" />
+                        <p:column rowspan="3" headerText="学时" />
+                        <p:column colspan="4" headerText="其中" />
+                        <p:column colspan="8" headerText="开课学期" />
+                        <p:column rowspan="3" headerText="考核方式" />
+                        <p:column rowspan="3" headerText="备注" />
+                    </p:row>
+                    <p:row>
+                        <p:column rowspan="2" headerText="理论" />
+                        <p:column rowspan="2" headerText="实验" />
+                        <p:column rowspan="2" headerText="上机" />
+                        <p:column rowspan="2" headerText="其他" />
+                        <p:column colspan="8" headerText="各学期学分分配" />
+                    </p:row>
+                    <p:row>
+                        <p:column headerText="一" />
+                        <p:column headerText="二" />
+                        <p:column headerText="三" />
+                        <p:column headerText="四" />
+                        <p:column headerText="五" />
+                        <p:column headerText="六" />
+                        <p:column headerText="七" />
+                        <p:column headerText="八" />
+                    </p:row>
+                    
+                </p:columnGroup>
+            </p:dataTable>
+        </h:form>
+    </h:body>
+</html>
+

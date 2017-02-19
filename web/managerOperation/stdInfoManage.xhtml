@@ -1,0 +1,123 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>学生信息管理</title>
+    </h:head>
+
+    <h:body>  
+        <h:form id="stdForm"> 
+
+            <h:panelGrid columns="3" style="margin-bottom:10px" cellpadding="5">
+                <p:outputLabel for="classes" value="班级："/>
+                <p:selectOneMenu id="classes" value="#{stdInfoBean.className}" panelStyle="width:180px" effect="fade" var="names" style="width:160px" filter="true" filterMatchMode="startsWith" > 
+                    <f:selectItems value="#{stdInfoBean.classNames}" var="name" itemLabel="#{name}" itemValue="#{name}"/>
+                </p:selectOneMenu>
+                <p:commandButton value="查找" icon="ui-icon-search" id="btn" action="#{stdInfoBean.setStudents()}" update="table"/>
+            </h:panelGrid>
+
+            <p:commandButton value="添加" type="button" onclick="PF('stdAdd').show()"/>
+
+            <p:dataTable var="std" value="#{stdInfoBean.students}" id="table" >
+                <f:facet name="header">
+                    学生信息管理
+                </f:facet>
+                <p:column headerText="姓名">
+                    <h:outputText value="#{std.name}"/>
+                </p:column>
+                <p:column headerText="学号">
+                    <h:outputText value="#{std.code}" />
+                </p:column>
+                <p:column headerText="性别">
+                    <h:outputText value="#{std.sex}" />
+                </p:column>
+                <p:column headerText="出生日期">
+                    <h:outputText value="#{std.birthday}" >
+                        <f:convertDateTime timeZone="GMT+8" pattern="yyyy-MM-dd" locale="zh" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="操作" width="250">
+                    <p:commandButton value="修改" type="button" onclick="PF('stdModify').show();" >
+                        <f:setPropertyActionListener value="#{std}" target="#{stdInfoBean.student}" /> 
+                    </p:commandButton>
+
+                    <p:commandButton value="详情" type="button" onclick="PF('stdDetail').show();" >
+                        <f:setPropertyActionListener value="#{std}" target="#{stdInfoBean.student}"/> 
+                    </p:commandButton>
+
+                    <p:commandButton value="删除" type="button" action="#{stdInfoBean.deleteStudent()}" update="table" />
+                </p:column>
+            </p:dataTable>
+        </h:form>
+
+        <p:dialog widgetVar="stdAdd" modal="true" header="添加学生">
+            <h:form id="addForm">
+                <p:panelGrid columns="2" style="margin-bottom:10px" >
+                    <h:outputLabel for="name" value="姓名" />
+                    <h:inputText id="name" value="#{stdInfoBean.student.name}" />
+                    <h:outputLabel for="code" value="学号" />
+                    <h:inputText id="code" value="#{stdInfoBean.student.code}" />
+                    <h:outputLabel for="sex" value="性别" />
+                    <h:inputText id="sex" value="#{stdInfoBean.student.sex}" />
+                    <h:outputLabel for="birthday" value="出生日期" />
+                    <p:inputMask id="birthday" value="#{stdInfoBean.student.birthday}" mask="9999-99-99" >
+                        <f:convertDateTime/>
+                    </p:inputMask>
+                    <h:outputLabel for="birthPlace" value="籍贯" />
+                    <h:inputText id="birthPlace" value="#{stdInfoBean.student.birthPlace}" />
+                    <h:outputLabel for="phone" value="联系电话" />
+                    <h:inputText id="phone" value="#{stdInfoBean.student.phone}" />
+                    <p:commandButton value="增加" oncomplete="PF('stdAdd').hide()" action="#{stdInfoBean.addStudent}"> 
+                        <p:ajax update=":stdForm:table"/>
+                    </p:commandButton>
+
+                </p:panelGrid>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog header="修改学生信息" widgetVar="stdModify" modal="true">
+            <h:form>
+                <p:panelGrid  columns="2" style="margin-bottom:10px" id="modifyPanel">
+                    <h:outputLabel for="name" value="姓名" />
+                    <h:inputText id="name" value="#{std.name}" />
+                    <h:outputLabel for="code" value="学号" />
+                    <h:inputText id="code" value="#{std.code}" />
+                    <h:outputLabel for="sex" value="性别" />
+                    <h:inputText id="sex" value="#{std.sex}" />
+                    <h:outputLabel for="birthday" value="出生日期" />
+                    <h:inputText id="birthday" value="#{std.birthday}" />
+                    <h:outputLabel for="birthPlace" value="籍贯" />
+                    <h:inputText id="birthPlace" value="#{std.birthPlace}" />
+                    <h:outputLabel for="phone" value="联系电话" />
+                    <h:inputText id="phone" value="#{std.phone}" />
+                    <p:commandButton value="修改" actionListener="#{stdInfoBean.modifyStudent}" update="@([id$=table])" oncomplete="stdModify.hide()"/> 
+                    <p:commandButton value="取消" onclick="stdModify.hide();" type="button" />
+                </p:panelGrid>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog widgetVar="stdDetail" modal="true" header="信息详情" >
+            <h:form>
+                <p:panelGrid columns="2" style="margin-bottom:10px" id="detailPanel">
+                    <h:outputLabel for="name" value="姓名" />
+                    <h:outputText id="name" value="#{std.name}" />
+                    <h:outputLabel for="code" value="学号" />
+                    <h:outputText id="code" value="#{std.code}" />
+                    <h:outputLabel for="sex" value="性别" />
+                    <h:outputText id="sex" value="#{std.sex}" />
+                    <h:outputLabel for="birthday" value="出生日期" />
+                    <h:outputText id="birthday" value="#{std.birthday}" />
+                    <h:outputLabel for="birthPlace" value="籍贯" />
+                    <h:outputText id="birthPlace" value="#{std.birthPlace}" />
+                    <h:outputLabel for="phone" value="联系电话" />
+                    <h:outputText id="phone" value="#{std.phone}" />
+                </p:panelGrid>
+            </h:form>
+        </p:dialog>
+    </h:body>
+
+</html>
+

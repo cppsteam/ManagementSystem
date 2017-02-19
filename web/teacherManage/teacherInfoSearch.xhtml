@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+
+    </h:head>
+    <h:body>
+
+        <h:form id="form">
+            <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+                <p:outputLabel for="classes" value="班级："/>
+                <p:selectOneMenu id="classes" value="#{teacherInfoSearchBean.subjectName}" panelStyle="width:180px" effect="fade" var="names" style="width:160px" filter="true" filterMatchMode="startsWith" > 
+                    <f:selectItems value="#{teacherInfoSearchBean.subjectNames}" var="name" itemLabel="#{name}" itemValue="#{name}" />
+                    <p:ajax listener="#{teacherInfoSearchBean.setTeachers()}" update=":form:list"/>
+                </p:selectOneMenu>
+            </h:panelGrid>
+
+            <p:layout>
+                <p:layoutUnit position="west">
+                    <p:selectOneListbox id="list" value="#{teacherInfoSearchBean.teacherCode}">
+                        <f:selectItems value="#{teacherInfoSearchBean.teachers}" var="tea" itemLabel="#{tea}" itemValue="#{tea}" />
+                        <p:ajax listener="#{teacherInfoSearchBean.findTeacher()}" update=":form:panel"/>
+                    </p:selectOneListbox>
+                </p:layoutUnit>
+
+                <p:layoutUnit position="center">
+                    <center>
+                        <p:panelGrid columns="2" id="panel" style=" height: 300px">
+
+                            <h:outputText value="姓名:" />
+                            <h:outputText value="#{teacherInfoSearchBean.teacher.name}" />
+
+                            <h:outputText value="职工号:" />
+                            <h:outputText value="#{teacherInfoSearchBean.teacher.code}" />
+
+                            <h:outputText value="性别:" />
+                            <h:outputText value="#{teacherInfoSearchBean.teacher.sex}" />
+
+                            <h:outputText value="班级:" />
+                            <h:outputText value="#{teacherInfoSearchBean.teacher.subject.name}" />
+
+                            <h:outputText value="出生日期:" />
+                            <h:outputText value="#{teacherInfoSearchBean.teacher.birthday}" >
+                                <f:convertDateTime timeZone="GMT+8" pattern="yyyy-MM-dd" locale="zh" />
+                            </h:outputText>
+
+                            <h:outputText value="电话:" />
+                            <h:outputText value="#{teacherInfoSearchBean.teacher.phone}" />
+
+                            <h:outputText value="籍贯:" />
+                            <h:outputText value="#{teacherInfoSearchBean.teacher.birthPlace}" />
+
+                            <h:outputText value="学历:" />
+                            <h:outputText value="#{teacherInfoSearchBean.teacher.diploma}" />
+                            
+                            <h:outputText value="职称:" />
+                            <h:outputText value="#{teacherInfoSearchBean.teacher.title}" />
+                        </p:panelGrid>
+                    </center>
+                </p:layoutUnit>
+            </p:layout>
+        </h:form>
+
+    </h:body>
+
+</html>
+

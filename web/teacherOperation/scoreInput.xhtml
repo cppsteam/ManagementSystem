@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            <h:panelGrid columns="3" style="margin-bottom:10px" cellpadding="5">
+                <p:outputLabel for="classCodes" value="所教班级："/>
+                <p:selectOneMenu id="classCodes" value="#{scoreInputBean.classCode}" panelStyle="width:180px" style="width:160px">
+                    <f:selectItems value="#{scoreInputBean.classCodes}" var="code" itemLabel="#{code}" itemValue="#{code}"/>
+                </p:selectOneMenu>
+                <p:commandButton value="查找" icon="ui-icon-search" action="#{scoreInputBean.setStdArranges()}" update="table" />
+            </h:panelGrid>
+            <p:dataTable id="table" var="std" value="#{scoreInputBean.stdArranges}" editable="true" editMode="">
+                <f:facet name="header">
+                    学生成绩录入
+                </f:facet>
+
+                <p:ajax event="cellEdit" listener="#{scoreInputBean.onCellEdit}" update="table" />
+
+                <p:column headerText="姓名">
+                    <h:outputText value="#{std.student.name}" />
+                </p:column>
+
+                <p:column headerText="学号">
+                    <h:outputText value="#{std.student.code}" />
+                </p:column>
+
+                <p:column headerText="平时成绩">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{std.ordinaryScore}" />
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputText value="#{std.ordinaryScore}" style="width:100%"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+
+                <p:column headerText="末考成绩">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{std.testScore}" />
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputText value="#{std.testScore}" style="width:100%"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column headerText="总成绩">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{std.totalScore}" />
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputText value="#{std.totalScore}" style="width:100%"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+            </p:dataTable>
+            <p:growl id="growl" life="2000" />
+            <p:commandButton  value="成绩汇总" icon="ui-icon-star" actionListener="#{scoreInputBean.calculateTotalScore()}" update="table"/>
+            <p:commandButton  value="提交" icon="ui-icon-disk" update="growl" action="#{scoreInputBean.saveScore()}"/>
+        </h:form>
+    </h:body>
+</html>
+

@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+
+    </h:head>
+    <h:body>
+
+        <h:form id="form">
+            <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+                <p:outputLabel for="classes" value="班级："/>
+                <p:selectOneMenu id="classes" value="#{stdInfoSearchBean.className}" panelStyle="width:180px" effect="fade" var="names" style="width:160px" filter="true" filterMatchMode="startsWith" > 
+                    <f:selectItems value="#{stdInfoSearchBean.classNames}" var="name" itemLabel="#{name}" itemValue="#{name}" />
+                    <p:ajax listener="#{stdInfoSearchBean.setStudents()}" update=":form:list"/>
+                </p:selectOneMenu>
+            </h:panelGrid>
+
+            <p:layout>
+                <p:layoutUnit position="west">
+                    <p:selectOneListbox id="list" value="#{stdInfoSearchBean.stdCode}">
+                        <f:selectItems value="#{stdInfoSearchBean.students}" var="std" itemLabel="#{std}" itemValue="#{std}" />
+                        <p:ajax listener="#{stdInfoSearchBean.findStudent()}" update=":form:panel"/>
+                    </p:selectOneListbox>
+                </p:layoutUnit>
+
+                <p:layoutUnit position="center">
+                    <center>
+                        <p:panelGrid columns="2" id="panel" style=" height: 300px">
+
+                            <h:outputText value="姓名:" />
+                            <h:outputText value="#{stdInfoSearchBean.student.name}" />
+
+                            <h:outputText value="学号:" />
+                            <h:outputText value="#{stdInfoSearchBean.student.code}" />
+
+                            <h:outputText value="性别:" />
+                            <h:outputText value="#{stdInfoSearchBean.student.sex}" />
+
+                            <h:outputText value="班级:" />
+                            <h:outputText value="#{stdInfoSearchBean.student.classes.name}" />
+
+                            <h:outputText value="出生日期:" />
+                            <h:outputText value="#{stdInfoSearchBean.student.birthday}" >
+                                <f:convertDateTime timeZone="GMT+8" pattern="yyyy-MM-dd" locale="zh" />
+                            </h:outputText>
+
+                            <h:outputText value="电话:" />
+                            <h:outputText value="#{stdInfoSearchBean.student.phone}" />
+
+                            <h:outputText value="籍贯:" />
+                            <h:outputText value="#{stdInfoSearchBean.student.birthPlace}" />
+
+                            <h:outputText value="年级:" />
+                            <h:outputText value="#{stdInfoSearchBean.student.registerYear}" />
+                        </p:panelGrid>
+                    </center>
+                </p:layoutUnit>
+            </p:layout>
+        </h:form>
+
+    </h:body>
+
+</html>
+

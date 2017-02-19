@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <h:head>
+        <title>教务管理系统</title>
+    </h:head>
+
+    <h:body>
+        <p:layout fullPage="true" >
+
+            <p:layoutUnit position="north" size="55">
+                <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+                    <p:outputLabel value="#{menuBean.userName} 您好，欢迎进入教务管理系统"/>
+                    <p:commandButton action="/login/login.xhtml" value="退出登录"/>
+                </h:panelGrid>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="west" collapsible="true" size="235">
+                <h:form>
+                    <p:menu model="#{menuBean.model}" toggleable="true"/>
+                </h:form>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="center">
+                <p:panel id="main">
+                    <ui:include src="#{menuBean.url}"/>
+                </p:panel> 
+            </p:layoutUnit>
+
+        </p:layout>
+    </h:body>
+</html>
+

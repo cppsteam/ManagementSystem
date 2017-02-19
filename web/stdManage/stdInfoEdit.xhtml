@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>学生信息管理</title>
+    </h:head>
+
+    <h:body>  
+        <h:form id="stdForm"> 
+            <p:growl id="growl" showDetail="true" sticky="false" />  
+
+            <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+                <p:outputLabel for="classes" value="班级："/>
+                <p:selectOneMenu id="classes" value="#{stdInfoEditBean.className}" panelStyle="width:180px" effect="fade" var="names" style="width:160px" filter="true" filterMatchMode="startsWith" > 
+                    <f:selectItems value="#{stdInfoEditBean.classNames}" var="name" itemLabel="#{name}" itemValue="#{name}" />
+                    <p:ajax listener="#{stdInfoEditBean.setStudents()}" update="table"/>
+                </p:selectOneMenu>
+            </h:panelGrid>
+
+            <center>
+                <p:panel id="panel">
+                    <h:panelGrid columns="6" style="margin-bottom:10px" cellpadding="5">
+                        <h:outputLabel for="name" value="姓名"/>
+                        <p:inputMask id="name" value="#{stdInfoEditBean.student.name}" mask=""/>
+
+                        <h:outputLabel for="code" value="学号"/>
+                        <p:inputMask id="code" value="#{stdInfoEditBean.student.code}" mask=""/>
+
+                        <h:outputLabel for="sex" value="性别"/>
+                        <p:selectOneMenu id="sex" value="#{stdInfoEditBean.student.sex}" style="width:125px">
+                            <f:selectItem itemLabel="男" itemValue="男" />
+                            <f:selectItem itemLabel="女" itemValue="女" />
+                        </p:selectOneMenu>
+
+                        <h:outputLabel for="birthday" value="出生日期"/>
+                        <p:inputMask id="birthday" value="#{stdInfoEditBean.student.birthday}" mask="9999-99-99">
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy-MM-dd" locale="zh" />
+                        </p:inputMask>
+
+                        <h:outputLabel for="phone" value="电话"/>
+                        <p:inputMask id="phone" value="#{stdInfoEditBean.student.phone}" mask=""/>
+
+                        <h:outputLabel for="registerYear" value="年级"/>
+                        <p:inputMask id="registerYear" value="#{stdInfoEditBean.student.registerYear}" mask=""/>
+
+                    </h:panelGrid>
+
+                    <h:panelGrid columns="6" style="margin-bottom:10px" cellpadding="5">
+                        <p:outputLabel for="province" value="籍贯："/>
+                        <p:selectOneMenu id="province" value="#{stdInfoEditBean.province}" panelStyle="width:180px" effect="fade" var="tea" style="width:160px" filter="true" filterMatchMode="startsWith">
+                            <p:ajax listener="#{stdInfoEditBean.cityListener()}" update="city" />
+                            <f:selectItem itemLabel="所在省" itemValue="" noSelectionOption="true" />
+                            <f:selectItems value="#{stdInfoEditBean.provinces}" var="province" itemLabel="#{province}" itemValue="#{province}"/>
+                        </p:selectOneMenu>
+
+                        <p:selectOneMenu id="city" value="#{stdInfoEditBean.city}" panelStyle="width:180px" effect="fade" var="tea" style="width:160px" filter="true" filterMatchMode="startsWith">
+                            <p:ajax listener="#{stdInfoEditBean.regionListener()}" update="region" />
+                            <f:selectItem itemLabel="所在市" itemValue="" noSelectionOption="true" />
+                            <f:selectItems value="#{stdInfoEditBean.cities}" var="city" itemLabel="#{city}" itemValue="#{city}"/>
+                        </p:selectOneMenu>
+
+                        <p:selectOneMenu id="region" value="#{stdInfoEditBean.region}" panelStyle="width:180px" style="width:160px">
+                            <f:selectItem itemLabel="所在县/区" itemValue="" noSelectionOption="true" />
+                            <f:selectItems value="#{stdInfoEditBean.regions}" var="region" itemLabel="#{region}" itemValue="#{region}"/>
+                        </p:selectOneMenu>
+                    </h:panelGrid>
+
+
+                    <p:commandButton value="添加" action="#{stdInfoEditBean.addStudent}" update=":stdForm:growl,:stdForm:table,panel"/>
+                    <p:commandButton value="修改" action="#{stdInfoEditBean.updateStudent}" update=":stdForm:growl,:stdForm:table,panel"/>
+                </p:panel>
+            </center>
+            <p:separator />
+
+
+            <p:dataTable var="std" value="#{stdInfoEditBean.students}" id="table" selection="#{stdInfoEditBean.selectedStudents}" rowKey="#{std.code}">
+                
+                <f:facet name="header">
+                    学生信息管理
+                </f:facet>
+                <p:ajax event="rowSelect" listener="#{stdInfoEditBean.onRowSelect}" update=":stdForm:panel" />
+                <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                <p:column headerText="姓名">
+                    <h:outputText value="#{std.name}"/>
+                </p:column>
+                <p:column headerText="学号">
+                    <h:outputText value="#{std.code}" />
+                </p:column>
+                <p:column headerText="性别">
+                    <h:outputText value="#{std.sex}" />
+                </p:column>
+                <p:column headerText="出生日期">
+                    <h:outputText value="#{std.birthday}" >
+                        <f:convertDateTime timeZone="GMT+8" pattern="yyyy-MM-dd" locale="zh" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="电话">
+                    <h:outputText value="#{std.phone}" />
+                </p:column>
+                <p:column headerText="籍贯">
+                    <h:outputText value="#{std.birthPlace}" />
+                </p:column>
+                <p:column headerText="年级">
+                    <h:outputText value="#{std.registerYear}" />
+                </p:column>
+
+                <f:facet name="footer">
+                    <p:commandButton value="删除" actionListener="#{stdInfoEditBean.deleteStudent()}" update=":stdForm:growl,table" process="table">
+                        <p:confirm header="确认" message="确定删除学生？" icon="ui-icon-alert"/>
+                    </p:commandButton>
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton value="确定"  type="button" icon="ui-icon-check" styleClass="ui-confirmdialog-yes" />
+                        <p:commandButton value="取消" type="button"  icon="ui-icon-close" styleClass="ui-confirmdialog-no"/>
+                    </p:confirmDialog>
+                </f:facet>
+            </p:dataTable>
+
+
+
+        </h:form>
+
+    </h:body>
+
+</html>
+

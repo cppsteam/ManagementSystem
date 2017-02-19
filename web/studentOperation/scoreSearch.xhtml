@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            <h:panelGrid columns="3" style="margin-bottom:10px" cellpadding="5">
+                <p:outputLabel for="classes" value="学期："  />
+                <p:selectOneMenu id="classes" value="#{scoreSearchBean.semester}" panelStyle="width:180px"
+                                 effect="fade" var="semes" style="width:160px" >
+                    <f:selectItems value="#{scoreSearchBean.semesters}" var="semester" itemLabel="#{semester}" itemValue="#{semester}" />
+                    <p:column>
+                        <h:outputText value="#{semes}" />
+                    </p:column>
+                </p:selectOneMenu>
+                <p:commandButton value="检索" update="table" icon="ui-icon-search"/>
+            </h:panelGrid>
+            <p:panel id="scoreList" style="margin-bottom:20px">
+                <p:dataTable var="std" value="#{scoreSearchBean.stdArranges}" id="table">
+                    <f:facet name="header">
+                        成绩查看
+                    </f:facet>
+
+                    <p:column headerText="课程">
+                        <h:outputText value="#{std.courseArrange.teacherArrange.course.name}"/>
+                    </p:column>
+                    <p:column headerText="学分">
+                        <h:outputText value="#{std.courseArrange.teacherArrange.course.credit}" />
+                    </p:column>
+                    <p:column headerText="类别">
+                        <h:outputText value="#{std.courseArrange.teacherArrange.course.type}" />
+                    </p:column>
+                    <p:column headerText="考核方式">
+                        <h:outputText value="#{std.courseArrange.teacherArrange.course.examType}" />
+                    </p:column>
+                    <p:column headerText="考试成绩">
+                        <h:outputText value="#{std.testScore}" />
+                    </p:column>
+                    <p:column headerText="平时成绩">
+                        <h:outputText value="#{std.ordinaryScore}" />
+                    </p:column>
+                    <p:column headerText="总成绩">
+                        <h:outputText value="#{std.totalScore}" />
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+        </h:form>
+    </h:body>
+</html>
+

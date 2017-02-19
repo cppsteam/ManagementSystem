@@ -1,0 +1,174 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" sticky="false" />  
+            <center>
+                <p:panel id="panel">
+                    <h:panelGrid columns="6" style="margin-bottom:10px" cellpadding="5">
+                        <h:outputLabel for="name" value="课程名"/>
+                        <p:inputMask id="name" value="#{courseEditBean.course.name}" mask=""/>
+
+                        <h:outputLabel for="code" value="课程号"/>
+                        <p:inputMask id="code" value="#{courseEditBean.course.code}" mask=""/>
+
+                        <h:outputLabel for="credit" value="学分"/>
+                        <p:inputMask id="credit" value="#{courseEditBean.course.credit}" mask=""/>
+
+                        <h:outputLabel for="type" value="课程类别"/>
+                        <p:selectOneMenu id="type" value="#{courseEditBean.course.type}" style="width:125px">
+                            <f:selectItem itemLabel="公共基础课" itemValue="校级平台课"/>
+                            <f:selectItem itemLabel="学院基础课" itemValue="学科基础课"/>
+                            <f:selectItem itemLabel="专业课" itemValue="专业课"/>
+                        </p:selectOneMenu>
+                        
+                        <h:outputLabel for="type" value="课程性质"/>
+                        <p:selectOneMenu id="type" value="#{courseEditBean.course.property}" style="width:125px">
+                            <f:selectItem itemLabel="必修课" itemValue="必修课"/>
+                            <f:selectItem itemLabel="选修课" itemValue="选修课"/>
+                            <f:selectItem itemLabel="课外教育" itemValue="课外教育"/>
+                        </p:selectOneMenu>
+
+                        <h:outputLabel for="subject" value="开课院系"/>
+                        <p:selectOneMenu id="classes" value="#{courseEditBean.subject}" panelStyle="width:180px" effect="fade" var="names" style="width:160px" filter="true" filterMatchMode="startsWith" > 
+                            <f:selectItems value="#{courseEditBean.subjects}" var="name" itemLabel="#{name}" itemValue="#{name}" />
+                        </p:selectOneMenu>
+
+                        <h:outputLabel for="totalHour" value="总学时"/>
+                        <p:inputMask id="totalHour" value="#{courseEditBean.courseTrainingPlan.totalHour}" mask=""/>
+
+                        <h:outputLabel for="examType" value="考核方式"/>
+                        <p:selectOneMenu id="examType" value="#{courseEditBean.courseTrainingPlan.examType}" style="width:125px">
+                            <f:selectItem itemLabel="考查" itemValue="考查"/>
+                            <f:selectItem itemLabel="考试" itemValue="考试"/>
+                        </p:selectOneMenu>
+
+                        <h:outputLabel for="roomType" value="教室类型"/>
+                        <p:selectOneMenu id="roomType" value="#{courseEditBean.courseTrainingPlan.roomType}" style="width:125px">
+                            <f:selectItem itemLabel="多媒体教室" itemValue="多媒体教室"/>
+                            <f:selectItem itemLabel="机房" itemValue="机房"/>
+                            <f:selectItem itemLabel="体育楼" itemValue="体育楼"/>
+                            <f:selectItem itemLabel="实验室" itemValue="实验室"/>
+                        </p:selectOneMenu>
+
+                        <h:outputLabel for="semester" value="学期分配"/>
+                        <p:selectOneMenu id="semester" value="#{courseEditBean.courseTrainingPlan.semester}" style="width:125px">
+                            <f:selectItem itemLabel="一" itemValue="一"/>
+                            <f:selectItem itemLabel="二" itemValue="二"/>
+                            <f:selectItem itemLabel="三" itemValue="三"/>
+                            <f:selectItem itemLabel="四" itemValue="四"/>
+                            <f:selectItem itemLabel="五" itemValue="五"/>
+                            <f:selectItem itemLabel="六" itemValue="六"/>
+                            <f:selectItem itemLabel="七" itemValue="七"/>
+                            <f:selectItem itemLabel="八" itemValue="八"/>
+                        </p:selectOneMenu>
+
+                    </h:panelGrid>
+
+
+                    <p:commandButton value="添加" action="#{courseEditBean.addCourse}" update=":form:growl,:form:table,panel"/>
+                    <p:commandButton value="修改" action="#{courseEditBean.updateCourse}" update=":form:growl,:form:table,panel"/>
+                </p:panel>
+            </center>
+            <p:separator />
+            <p:dataTable var="plan" value="#{courseEditBean.courseTrainingPlans}" id="table"  widgetVar="table" selection="#{courseEditBean.selectedCourseTrainingPlans}" rowKey="#{plan.id}"
+                         emptyMessage="没有该课程" filteredValue="#{courseEditBean.filteredCourses}" reflow="true" rows="16" paginator="true">
+                <f:facet name="header">
+                    课程查询
+                </f:facet>
+
+                <p:ajax event="rowSelect" listener="#{courseEditBean.onRowSelect}" update=":form:panel" />
+                <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                
+                <f:facet name="{Exporters}">
+                    <h:commandLink>
+                        <p:graphicImage name="/resources/images/excel.jpg" width="24"/>
+                        <p:dataExporter type="xls" target="table" fileName="cars" />
+                    </h:commandLink>
+
+                    <h:commandLink>
+                        <p:graphicImage name="/resources/images/pdf.jpg" width="24"/>
+                        <p:dataExporter type="pdf" target="table" fileName="cars"/>
+                    </h:commandLink>
+                </f:facet>
+
+                <p:column filterBy="#{plan.course.code}" headerText="课程号" filterMatchMode="contains">
+                    <h:outputText value="#{plan.course.code}" />
+                </p:column>
+
+                <p:column filterBy="#{plan.course.name}" headerText="课程名" filterMatchMode="in">
+                    <f:facet name="filter">
+                        <p:selectCheckboxMenu label="课程名" onchange="PF('table').filter()" panelStyle="width:100px" scrollHeight="150" >
+                            <f:selectItems value="#{courseEditBean.courseNames}" />
+                        </p:selectCheckboxMenu>
+                    </f:facet>
+                    <h:outputText value="#{plan.course.name}" />
+                </p:column>
+
+                <p:column filterBy="#{plan.course.credit}" headerText="学分" filterMatchMode="contains">
+                    <h:outputText value="#{plan.course.credit}" />
+                </p:column>
+
+
+                <p:column filterBy="#{plan.course.type}" headerText="课程性质" filterMatchMode="contains">
+                    <f:facet name="filter">
+                        <p:selectOneMenu onchange="PF('table').filter()" >
+                            <f:selectItem itemLabel="Select One" itemValue="#{null}" noSelectionOption="true" />
+                            <f:selectItem itemLabel="公共基础课" itemValue="校级平台课"/>
+                            <f:selectItem itemLabel="学院基础课" itemValue="学科基础课"/>
+                            <f:selectItem itemLabel="专业课" itemValue="专业课"/>
+                        </p:selectOneMenu>
+                    </f:facet>
+                    <h:outputText value="#{plan.course.type}" />
+                </p:column>
+
+                <p:column filterBy="#{plan.examType}" headerText="考核方式" filterMatchMode="contains">
+                    <f:facet name="filter">
+                        <p:selectOneMenu onchange="PF('table').filter()" >
+                            <f:selectItem itemLabel="Select One" itemValue="#{null}" noSelectionOption="true" />
+                            <f:selectItem itemLabel="考查" itemValue="考查"/>
+                            <f:selectItem itemLabel="考试" itemValue="考试"/>
+                        </p:selectOneMenu>
+                    </f:facet>
+                    <h:outputText value="#{plan.examType}" />
+                </p:column>
+
+                <p:column filterBy="#{plan.totalHour}" headerText="总学时" filterMatchMode="contains">
+                    <h:outputText value="#{plan.totalHour}" />
+                </p:column>
+
+                <p:column filterBy="#{plan.roomType}" headerText="教室类型" filterMatchMode="contains">
+                    <f:facet name="filter">
+                        <p:selectOneMenu onchange="PF('table').filter()" >
+                            <f:selectItem itemLabel="Select One" itemValue="#{null}" noSelectionOption="true" />
+                            <f:selectItem itemLabel="多媒体教室" itemValue="多媒体教室"/>
+                            <f:selectItem itemLabel="机房" itemValue="机房"/>
+                            <f:selectItem itemLabel="体育楼" itemValue="体育楼"/>
+                            <f:selectItem itemLabel="实验室" itemValue="实验室"/>
+                        </p:selectOneMenu>
+                    </f:facet>
+                    <h:outputText value="#{plan.roomType}" />
+                </p:column>
+                
+                <f:facet name="footer">
+                    <p:commandButton value="删除" actionListener="#{courseEditBean.deleteCourse()}" update=":form:growl,table" process="table">
+                        <p:confirm header="确认" message="确定删除课程？" icon="ui-icon-alert"/>
+                    </p:commandButton>
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton value="确定"  type="button" icon="ui-icon-check" styleClass="ui-confirmdialog-yes" />
+                        <p:commandButton value="取消" type="button"  icon="ui-icon-close" styleClass="ui-confirmdialog-no"/>
+                    </p:confirmDialog>
+                </f:facet>
+
+            </p:dataTable>
+        </h:form>
+    </h:body>
+</html>
+

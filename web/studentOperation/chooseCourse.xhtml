@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h:form prependId="true"> 
+            <h:panelGrid columns="3" style="margin-bottom:10px" cellpadding="5">
+                <p:outputLabel for="type" value="课程类别："/>
+                <p:selectOneMenu id="type" value="#{chooseCourseBean.courseType}">
+                    <f:selectItem itemLabel="校级平台课" itemValue="校级平台课"/>
+                    <f:selectItem itemLabel="学科基础课" itemValue="学科基础课"/>
+                    <f:selectItem itemLabel="专业课" itemValue="专业课"/> 
+                </p:selectOneMenu>
+                <p:commandButton value="检索" update="table" icon="ui-icon-search" styleClass="ui-priority-primary" />
+            </h:panelGrid>
+            <p:dataTable id="table" var="course" value="#{chooseCourseBean.courseArranges}" selection="#{chooseCourseBean.selectedArrange}" >
+                <f:facet name="header">
+                    选课
+                </f:facet>
+                <p:column headerText="课程">
+                    <h:outputText value="#{course.teacherArrange.course.name}"/>
+                </p:column>
+                <p:column headerText="任课老师">
+                    <h:outputText value="#{course.teacherArrange.teacher.name}"/>
+                </p:column>
+                <p:column headerText="教室">
+                    <h:outputText value="#{course.classroom.building},#{course.classroom.code}"/>
+                </p:column>
+                <p:column headerText="上课时间">
+                    <h:outputText value="#{course.classTime}"/>
+                </p:column>
+                <p:column selectionMode="single" style="width:16px;text-align:center" id="select"/>
+                <f:facet name="footer">
+                    <p:commandButton update="table" icon="ui-icon-search" value="选择" action="#{chooseCourseBean.chooseCourse}"/>
+                </f:facet>
+            </p:dataTable>
+        </h:form>
+
+    </h:body>
+</html>
+

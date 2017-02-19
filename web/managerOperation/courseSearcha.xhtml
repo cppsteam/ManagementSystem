@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h:form>
+
+            <h:panelGrid columns="5" style="margin-bottom:10px" cellpadding="5">
+
+                <p:outputLabel for="faculties" value="学院："/>
+                <p:selectOneMenu id="faculties" value="#{courseSearchBeana.facultyName}" panelStyle="width:180px" effect="fade" var="tea" style="width:160px" filter="true" filterMatchMode="startsWith">
+                    <p:ajax listener="#{courseSearchBeana.subjectListener()}" update="subjects" />
+                    <f:selectItem itemLabel="请选择学院" itemValue="" noSelectionOption="true" />
+                    <f:selectItems value="#{courseSearchBeana.facultyNames}" var="faculty" itemLabel="#{faculty}" itemValue="#{faculty}"/>
+                </p:selectOneMenu>
+
+                <p:outputLabel for="subjects" value="专业："/>
+                <p:selectOneMenu id="subjects" value="#{courseSearchBeana.subjectName}" panelStyle="width:180px" style="width:160px">
+                    <f:selectItem itemLabel="请选择专业" itemValue="" noSelectionOption="true" />
+                    <f:selectItems value="#{courseSearchBeana.subjectNames}" var="subject" itemLabel="#{subject}" itemValue="#{subject}"/>
+                </p:selectOneMenu>
+
+                <p:commandButton value="查找" icon="ui-icon-search" action="#{courseSearchBeana.setCourseTrainingPlans()}" update="table" />
+            </h:panelGrid>
+
+            <p:dataTable var="cour" value="#{courseSearchBeana.courseTrainingPlans}" id="table">
+                <f:facet name="header">
+                    课程查看
+                </f:facet>
+                <p:column headerText="课程">
+                    <h:outputText value="#{cour.course.name}" />
+                </p:column>
+
+                <p:column headerText="课程代号">
+                    <h:outputText value="#{cour.course.code}" />
+                </p:column>
+
+                <p:column headerText="学分">
+                    <h:outputText value="#{cour.course.credit}" />
+                </p:column>
+
+                <p:column headerText="课程类别">
+                    <h:outputText value="#{cour.course.type}" />
+                </p:column>
+
+                <p:column headerText="考试类型">
+                    <h:outputText value="#{cour.course.examType}" />
+                </p:column>
+
+                <p:column headerText="学时">
+                    <h:outputText value="#{cour.course.totalHour}" />
+                </p:column>
+
+                <p:column headerText="上课时段">
+                    <h:outputText value="#{cour.rank},#{cour.semester}" />
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </h:body>
+</html>
+

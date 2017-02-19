@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            <h:panelGrid columns="5" style="margin-bottom:10px" cellpadding="5">
+
+                <p:outputLabel for="teacher" value="教师："/>
+
+                <p:selectOneMenu id="teacher" value="#{scoreManageBean.teacherName}" panelStyle="width:180px" effect="fade" var="tea" style="width:160px" filter="true" filterMatchMode="startsWith">
+                    <p:ajax listener="#{scoreManageBean.classCodesListener}" update="codes" />
+                    <f:selectItem itemLabel="请选择老师" itemValue="" noSelectionOption="true" />
+                    <f:selectItems value="#{scoreManageBean.teacherNames}" var="teacher" itemLabel="#{teacher}" itemValue="#{teacher}"/>
+                </p:selectOneMenu>
+
+                <p:outputLabel for="codes" value="所教班级："/>
+
+                <p:selectOneMenu id="codes" value="#{scoreManageBean.classCode}" panelStyle="width:180px" style="width:160px">
+                    <f:selectItems value="#{scoreManageBean.classCodes}" var="code" itemLabel="#{code}" itemValue="#{code}"/>
+                </p:selectOneMenu>
+
+                <p:commandButton value="查找" icon="ui-icon-search" action="#{scoreManageBean.setStdArranges()}" update="table" />
+            </h:panelGrid>
+
+            <p:dataTable id="table" var="arrange" value="#{scoreManageBean.stdArranges}" editable="true" style="margin-bottom:20px">
+
+                <f:facet name="header">
+                    成绩管理
+                </f:facet>
+                <p:ajax event="rowEdit" listener="#{scoreManageBean.onRowEdit}" update="table" />
+
+                <p:column headerText="学生">
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{arrange.student.name}" /></f:facet>
+                        <f:facet name="input"><p:inputText value="#{arrange.student.name}" style="width:100%"/></f:facet>
+                    </p:cellEditor>
+                </p:column>
+
+                <p:column headerText="学号">
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{arrange.student.code}" /></f:facet>
+                        <f:facet name="input"><p:inputText value="#{arrange.student.code}" style="width:100%" label="Year"/></f:facet>
+                    </p:cellEditor>
+                </p:column>
+
+                <p:column headerText="平时成绩">
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{arrange.ordinaryScore}" /></f:facet>
+                        <f:facet name="input"><p:inputText value="#{arrange.ordinaryScore}" style="width:100%" label="Year"/></f:facet>
+                    </p:cellEditor>
+                </p:column>
+
+                <p:column headerText="考试成绩">
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{arrange.testScore}" /></f:facet>
+                        <f:facet name="input"><p:inputText value="#{arrange.testScore}" style="width:100%" label="Year"/></f:facet>
+                    </p:cellEditor>
+                </p:column>
+
+                <p:column headerText="总成绩">
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{arrange.totalScore}" /></f:facet>
+                        <f:facet name="input"><p:inputText value="#{arrange.totalScore}" style="width:100%" label="Year"/></f:facet>
+                    </p:cellEditor>
+                </p:column>
+
+                <p:column style="width:32px">
+                    <p:rowEditor />
+                </p:column>
+
+            </p:dataTable>      
+        </h:form>
+    </h:body>
+</html>
+

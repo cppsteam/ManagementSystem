@@ -1,0 +1,142 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>教师信息管理</title>
+    </h:head>
+
+    <h:body>  
+        <h:form id="form"> 
+            <p:growl id="growl" showDetail="true" sticky="false" />  
+
+            <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+                <p:outputLabel for="subject" value="所属系："/>
+                <p:selectOneMenu id="subject" value="#{teacherInfoEditBean.subjectName}" panelStyle="width:180px" effect="fade" var="names" style="width:160px" filter="true" filterMatchMode="startsWith" > 
+                    <f:selectItems value="#{teacherInfoEditBean.subjectNames}" var="name" itemLabel="#{name}" itemValue="#{name}" />
+                    <p:ajax listener="#{teacherInfoEditBean.setTeachers()}" update=":form:table"/>
+                </p:selectOneMenu>
+            </h:panelGrid>
+
+            <center>
+                <p:panel id="panel">
+                    <h:panelGrid columns="6" style="margin-bottom:10px" cellpadding="5">
+                        <h:outputLabel for="name" value="姓名"/>
+                        <p:inputMask id="name" value="#{teacherInfoEditBean.teacher.name}" mask=""/>
+
+                        <h:outputLabel for="code" value="职工号"/>
+                        <p:inputMask id="code" value="#{teacherInfoEditBean.teacher.code}" mask=""/>
+
+                        <h:outputLabel for="sex" value="性别"/>
+                        <p:selectOneMenu id="sex" value="#{teacherInfoEditBean.teacher.sex}" style="width:125px">
+                            <f:selectItem itemLabel="男" itemValue="男" />
+                            <f:selectItem itemLabel="女" itemValue="女" />
+                        </p:selectOneMenu>
+
+                        <h:outputLabel for="birthday" value="出生日期"/>
+                        <p:inputMask id="birthday" value="#{teacherInfoEditBean.teacher.birthday}" mask="9999-99-99">
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy-MM-dd" locale="zh" />
+                        </p:inputMask>
+
+                        <h:outputLabel for="phone" value="电话"/>
+                        <p:inputMask id="phone" value="#{teacherInfoEditBean.teacher.phone}" mask=""/>
+
+                        <h:outputLabel for="title" value="职称"/>
+                        <p:selectOneMenu id="title" value="#{teacherInfoEditBean.teacher.title}" panelStyle="width:180px" effect="fade" var="tea" style="width:160px" filter="true" filterMatchMode="startsWith">
+                            <f:selectItem itemLabel="助教" itemValue="助教" />
+                            <f:selectItem itemLabel="讲师" itemValue="讲师" />
+                            <f:selectItem itemLabel="副教授" itemValue="副教授" />
+                            <f:selectItem itemLabel="教授" itemValue="教授" />
+                        </p:selectOneMenu>
+        
+                        <h:outputLabel for="diploma" value="学历"/>
+                        <p:selectOneMenu id="diploma" value="#{teacherInfoEditBean.teacher.diploma}" panelStyle="width:100px" effect="fade" var="tea" style="width:160px" filter="true" filterMatchMode="startsWith">
+                            <f:selectItem itemLabel="本科" itemValue="本科" />
+                            <f:selectItem itemLabel="硕士研究生" itemValue="硕士研究生" />
+                            <f:selectItem itemLabel="博士研究生" itemValue="博士研究生" />
+                        </p:selectOneMenu>
+
+                    </h:panelGrid>
+
+                    <h:panelGrid columns="6" style="margin-bottom:10px" cellpadding="5">
+                        <p:outputLabel for="province" value="籍贯："/>
+                        <p:selectOneMenu id="province" value="#{teacherInfoEditBean.province}" panelStyle="width:180px" effect="fade" var="tea" style="width:160px" filter="true" filterMatchMode="startsWith">
+                            <p:ajax listener="#{teacherInfoEditBean.cityListener()}" update="city" />
+                            <f:selectItem itemLabel="所在省" itemValue="" noSelectionOption="true" />
+                            <f:selectItems value="#{teacherInfoEditBean.provinces}" var="province" itemLabel="#{province}" itemValue="#{province}"/>
+                        </p:selectOneMenu>
+
+                        <p:selectOneMenu id="city" value="#{teacherInfoEditBean.city}" panelStyle="width:180px" effect="fade" var="tea" style="width:160px" filter="true" filterMatchMode="startsWith">
+                            <p:ajax listener="#{teacherInfoEditBean.regionListener()}" update="region" />
+                            <f:selectItem itemLabel="所在市" itemValue="" noSelectionOption="true" />
+                            <f:selectItems value="#{teacherInfoEditBean.cities}" var="city" itemLabel="#{city}" itemValue="#{city}"/>
+                        </p:selectOneMenu>
+
+                        <p:selectOneMenu id="region" value="#{teacherInfoEditBean.region}" panelStyle="width:180px" style="width:160px">
+                            <f:selectItem itemLabel="所在县/区" itemValue="" noSelectionOption="true" />
+                            <f:selectItems value="#{teacherInfoEditBean.regions}" var="region" itemLabel="#{region}" itemValue="#{region}"/>
+                        </p:selectOneMenu>
+                    </h:panelGrid>
+
+
+                    <p:commandButton value="添加" action="#{teacherInfoEditBean.addTeacher()}" update=":form:growl,:form:table,panel"/>
+                    <p:commandButton value="修改" action="#{teacherInfoEditBean.updateTeacher()}" update=":form:growl,:form:table,panel"/>
+                </p:panel>
+            </center>
+            
+            <p:separator />
+
+            <p:dataTable var="tea" value="#{teacherInfoEditBean.teachers}" id="table" selection="#{teacherInfoEditBean.selectedTeachers}" rowKey="#{tea.code}">
+                <f:facet name="header">
+                    教师信息管理
+                </f:facet>
+                <p:ajax event="rowSelect" listener="#{teacherInfoEditBean.onRowSelect}" update=":form:panel" />
+                <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                <p:column headerText="姓名">
+                    <h:outputText value="#{tea.name}"/>
+                </p:column>
+                <p:column headerText="学号">
+                    <h:outputText value="#{tea.code}" />
+                </p:column>
+                <p:column headerText="性别">
+                    <h:outputText value="#{tea.sex}" />
+                </p:column>
+                <p:column headerText="出生日期">
+                    <h:outputText value="#{tea.birthday}" >
+                        <f:convertDateTime timeZone="GMT+8" pattern="yyyy-MM-dd" locale="zh" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="电话">
+                    <h:outputText value="#{tea.phone}" />
+                </p:column>
+                <p:column headerText="籍贯">
+                    <h:outputText value="#{tea.birthPlace}" />
+                </p:column>
+                <p:column headerText="职称">
+                    <h:outputText value="#{tea.title}" />
+                </p:column>
+                <p:column headerText="学历">
+                    <h:outputText value="#{tea.diploma}" />
+                </p:column>
+
+                <f:facet name="footer">
+                    <p:commandButton value="删除" actionListener="#{teacherInfoEditBean.deleteTeacher()}" update=":form:growl,table" process="table">
+                        <p:confirm header="确认" message="确定删除教师？" icon="ui-icon-alert"/>
+                    </p:commandButton>
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton value="确定"  type="button" icon="ui-icon-check" styleClass="ui-confirmdialog-yes" />
+                        <p:commandButton value="取消" type="button"  icon="ui-icon-close" styleClass="ui-confirmdialog-no"/>
+                    </p:confirmDialog>
+                </f:facet>
+            </p:dataTable>
+
+
+
+        </h:form>
+
+    </h:body>
+
+</html>
+

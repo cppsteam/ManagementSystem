@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+
+    </h:head>
+    <h:body>
+
+        <h:form id="form">
+            <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+                <p:outputLabel for="classes" value="班级："/>
+                <p:selectOneMenu id="classes" value="#{teacherInfoSearchBean.subjectName}" panelStyle="width:180px" effect="fade" var="names" style="width:160px" filter="true" filterMatchMode="startsWith" > 
+                    <f:selectItems value="#{teacherInfoSearchBean.subjectNames}" var="name" itemLabel="#{name}" itemValue="#{name}" />
+                    <p:ajax listener="#{teacherInfoSearchBean.setTeachers()}" update=":form:list"/>
+                </p:selectOneMenu>
+            </h:panelGrid>
+
+            <p:layout>
+                <p:layoutUnit position="west">
+                    <p:selectOneListbox id="list" value="#{teacherInfoSearchBean.teacherCode}">
+                        <f:selectItems value="#{teacherInfoSearchBean.teachers}" var="std" itemLabel="#{std}" itemValue="#{std}" />
+                        <p:ajax listener="#{teacherInfoSearchBean.findTeacher()}" update=":form:panel"/>
+                    </p:selectOneListbox>
+                </p:layoutUnit>
+
+                <p:layoutUnit position="center">
+                    <center>
+                        <p:panelGrid columns="2" id="panel" style=" height: 300px">
+                            <h:outputLabel for="name" value="姓名:" />
+                            <p:inplace id="name">
+                                <p:inputText value="#{teacherInfoSearchBean.teacher.name}" />
+                            </p:inplace>
+
+                            <h:outputLabel for="code" value="职工号:" />
+                            <p:inplace id="code">
+                                <p:inputText value="#{teacherInfoSearchBean.teacher.code}" />
+                            </p:inplace>
+
+                            <h:outputLabel for="sex" value="性别:" />
+                            <p:inplace id="sex">
+                                <p:selectOneMenu id="sex" value="#{teacherInfoSearchBean.teacher.sex}" style="width:125px">
+                                    <f:selectItem itemLabel="男" itemValue="男" />
+                                    <f:selectItem itemLabel="女" itemValue="女" />
+                                </p:selectOneMenu>
+                            </p:inplace>
+
+                            <h:outputLabel for="class" value="所属系：" />
+                            <p:inplace id="class">
+                                <p:inputText value="#{teacherInfoSearchBean.teacher.subject.name}" />
+                            </p:inplace>
+
+                            <h:outputLabel for="birthday" value="出生日期:" />
+                            <p:inplace id="birthday">
+                                <p:inputText value="#{teacherInfoSearchBean.teacher.birthday}" >
+                                    <f:convertDateTime timeZone="GMT+8" pattern="yyyy-MM-dd" locale="zh" />
+                                </p:inputText>
+                            </p:inplace>
+
+                            <h:outputLabel for="phone" value="电话:" />
+                            <p:inplace id="phone">
+                                <p:inputText value="#{teacherInfoSearchBean.teacher.phone}" />
+                            </p:inplace>
+
+                            <h:outputLabel for="birthPlace" value="籍贯:" />
+                            <p:inplace id="birthPlace">
+                                <p:inputText value="#{teacherInfoSearchBean.teacher.birthPlace}" />
+                            </p:inplace>
+
+                            <h:outputLabel for="title" value="职称：" />
+                            <p:inplace id="title">
+                                <p:selectOneMenu id="title" value="#{teacherInfoSearchBean.teacher.title}" panelStyle="width:180px" effect="fade" var="tea" style="width:160px" filter="true" filterMatchMode="startsWith">
+                                    <f:selectItem itemLabel="助教" itemValue="助教" />
+                                    <f:selectItem itemLabel="讲师" itemValue="讲师" />
+                                    <f:selectItem itemLabel="副教授" itemValue="副教授" />
+                                    <f:selectItem itemLabel="教授" itemValue="教授" />
+                                </p:selectOneMenu>
+                            </p:inplace>
+
+                            <h:outputLabel for="diploma" value="学历:" />
+                            <p:inplace id="diploma">
+                                <p:selectOneMenu id="diploma" value="#{teacherInfoSearchBean.teacher.diploma}" panelStyle="width:100px" effect="fade" var="tea" style="width:160px" filter="true" filterMatchMode="startsWith">
+                                    <f:selectItem itemLabel="本科" itemValue="本科" />
+                                    <f:selectItem itemLabel="硕士研究生" itemValue="硕士研究生" />
+                                    <f:selectItem itemLabel="博士研究生" itemValue="博士研究生" />
+                                </p:selectOneMenu>
+                            </p:inplace>
+                        </p:panelGrid>
+                        <p:commandButton value="保存" action="#{teacherInfoSearchBean.updateTeacher()}" update=":form:panel"/>
+                    </center>
+                </p:layoutUnit>
+            </p:layout>
+        </h:form>
+
+    </h:body>
+
+</html>
+
